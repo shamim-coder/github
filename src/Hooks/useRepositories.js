@@ -1,33 +1,38 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useRepositories = (username) => {
-    // const [user] = useUser();
-    // const { repos_url } = user;
-
-    const [page, setPage] = useState(2);
-    const [perPage, setPerPage] = useState(10);
-
-    const repos_url = `https://api.github.com/users/${username}/repos?per_page=${perPage}`;
-
-    const [repositories, setRepositories] = useState([]);
-    const [loading, setLoading] = useState(false);
+const useRepositories = (username, setRepositories) => {
+    const [pageLoading, setPageLoading] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [newer, setNewer] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
+        setPageLoading(true);
 
-        const getRepos = async () => {
-            try {
-                const { data } = await axios.get(repos_url);
+        const url = `https://api.github.com/users/${username}/repos?page=${page}&per_page=${size}${newer ? "&sort=created" : ""}`;
+        console.log(url);
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
                 setRepositories(data);
-                setLoading(false);
-            } catch (error) {
-                console.error(error.message);
-            }
-        };
-        getRepos();
-    }, [repos_url]);
-    return [repositories, setRepositories, loading];
+                setPageLoading(false);
+            })
+            .catch((err) => {
+                return err.message;
+            });
+    }, [page, size, username, pageNumber, setRepositories, newer]);
+
+    useEffect(() => {
+        fetch(`https://api.github.com/users/${username}`)
+            .then((res) => res.json())
+            .then((data) => {
+                const numberOfPage = data.public_repos / size;
+                setPageNumber(Math.ceil(numberOfPage));
+            });
+    }, [size, username, page, pageNumber]);
+
+    return { pageLoading, page, setPage, pageNumber, setNewer, newer };
 };
 
 export default useRepositories;

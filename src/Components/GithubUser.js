@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useRepositories from "../Hooks/useRepositories";
 import useUser from "../Hooks/useUser";
@@ -8,14 +8,15 @@ import Repositories from "./Repositories";
 
 const GithubUser = () => {
     const { username } = useParams();
-    const [repositories, setRepositories] = useRepositories(username);
     const [user] = useUser(username);
+    const [repositories, setRepositories] = useState([]);
+    const { pageLoading } = useRepositories(username, setRepositories);
 
     return (
-        <div>
+        <div className="container mx-auto px-5">
             <Header user={user} />
-            <Repositories repositories={repositories} />
-            <Pagination totalRepos={user.public_repos} setRepositories={setRepositories} username={username} />
+            <Repositories pageLoading={pageLoading} repositories={repositories} />
+            <Pagination username={username} setRepositories={setRepositories} />
         </div>
     );
 };

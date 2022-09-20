@@ -20,6 +20,7 @@ const useUser = (username) => {
         };
         getUser();
     }, [API]);
+
     return [user, setUser, loading];
 };
 

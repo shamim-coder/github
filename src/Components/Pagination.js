@@ -1,31 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { faArrowLeftLong, faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import useRepositories from "../Hooks/useRepositories";
 
-const Pagination = ({ setRepositories, username }) => {
-    const [pageNumber, setPageNumber] = useState(1);
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-
-    useEffect(() => {
-        const url = `https://api.github.com/users/${username}/repos?page=${page}&per_page=${size}`;
-        fetch(url)
-            .then((res) => res.json())
-            .then((data) => {
-                setRepositories(data);
-            });
-    }, [page, setRepositories, size, username]);
-
-    useEffect(() => {
-        fetch(`https://api.github.com/users/${username}`)
-            .then((res) => res.json())
-            .then((data) => {
-                const numberOfPage = data.public_repos / size;
-                setPageNumber(Math.ceil(numberOfPage));
-            });
-    }, [size, username]);
+const Pagination = ({ username, setRepositories }) => {
+    const { page, setPage, pageNumber, setNewer, newer } = useRepositories(username, setRepositories);
 
     return (
-        <>
-            <div className="btn-group w-full justify-center py-10">
+        <div className="table mx-auto my-10">
+            <div className="btn-group py-5">
                 <button onClick={() => setPage(page - 1)} className={`btn btn-info btn-outline btn-sm ${page === 1 ? "btn-disabled" : undefined}`}>
                     «
                 </button>
@@ -40,7 +23,16 @@ const Pagination = ({ setRepositories, username }) => {
                     »
                 </button>
             </div>
-        </>
+
+            <div className="flex justify-between items-center">
+                <button onClick={() => setNewer(false)} className={`capitalize btn btn-outline ${!newer ? "btn-disabled" : "btn-info"}`}>
+                    {<FontAwesomeIcon className="mr-2" icon={faArrowLeftLong} />} Older
+                </button>
+                <button onClick={() => setNewer(true)} className={`capitalize btn btn-outline ${newer ? "btn-disabled" : "btn-info"}`}>
+                    Newer {<FontAwesomeIcon className="ml-2" icon={faArrowRightLong} />}
+                </button>
+            </div>
+        </div>
     );
 };
 
