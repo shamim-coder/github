@@ -5,7 +5,10 @@ const useRepositories = (username) => {
     // const [user] = useUser();
     // const { repos_url } = user;
 
-    const repos_url = `https://api.github.com/users/${username}/repos`;
+    const [page, setPage] = useState(2);
+    const [perPage, setPerPage] = useState(10);
+
+    const repos_url = `https://api.github.com/users/${username}/repos?per_page=${perPage}`;
 
     const [repositories, setRepositories] = useState([]);
     const [loading, setLoading] = useState(false);
