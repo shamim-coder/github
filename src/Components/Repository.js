@@ -19,7 +19,11 @@ const Repository = ({ repository }) => {
                 })
                 .slice(0, 4)}
 
-            {topics.length > 4 && <button className="btn btn-sm btn-info mb-2 text-white">{topics.length - 4 + "+"}</button>}
+            {topics.length > 4 && (
+                <div data-tip={topics.slice(4).slice(",").join(", ")} className="tooltip">
+                    <button className="btn btn-sm btn-info mb-2 text-white">{topics.length - 4 + "+"}</button>
+                </div>
+            )}
         </div>
     );
 };
