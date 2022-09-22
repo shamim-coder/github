@@ -11,15 +11,18 @@ const useRepositories = (username, setRepositories) => {
         setPageLoading(true);
 
         const url = `https://api.github.com/users/${username}/repos?page=${page}&per_page=${size}${newer ? "&sort=created" : ""}`;
-        console.log(url);
+
         fetch(url)
             .then((res) => res.json())
             .then((data) => {
-                setRepositories(data);
-                setPageLoading(false);
+                if (data.length > 0) {
+                    setRepositories(data);
+                    setPageLoading(false);
+                }
             })
             .catch((err) => {
-                return err.message;
+                setPageLoading(false);
+                console.log(err);
             });
     }, [page, size, username, pageNumber, setRepositories, newer]);
 
@@ -29,6 +32,9 @@ const useRepositories = (username, setRepositories) => {
             .then((data) => {
                 const numberOfPage = data.public_repos / size;
                 setPageNumber(Math.ceil(numberOfPage));
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }, [size, username, page, pageNumber]);
 

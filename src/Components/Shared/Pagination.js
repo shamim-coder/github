@@ -1,7 +1,7 @@
 import { faArrowLeftLong, faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import useRepositories from "../Hooks/useRepositories";
+import useRepositories from "../../Hooks/useRepositories";
 
 const Pagination = ({ username, setRepositories }) => {
     const { page, setPage, pageNumber, setNewer, newer } = useRepositories(username, setRepositories);
@@ -13,11 +13,12 @@ const Pagination = ({ username, setRepositories }) => {
                     «
                 </button>
 
-                {[...Array(pageNumber).keys()].map((number) => (
-                    <button key={number} onClick={() => setPage(number + 1)} className={`${page === number + 1 ? "btn btn-sm btn-info" : "btn btn-sm btn-outline btn-info"}`}>
-                        {number + 1}
-                    </button>
-                ))}
+                {pageNumber &&
+                    [...Array(pageNumber).keys()].map((number) => (
+                        <button key={number} onClick={() => setPage(number + 1)} className={`${page === number + 1 ? "btn btn-sm btn-info" : "btn btn-sm btn-outline btn-info"}`}>
+                            {number + 1}
+                        </button>
+                    ))}
 
                 <button onClick={() => setPage(page + 1)} className={`btn btn-info btn-outline btn-sm ${page === pageNumber ? "btn-disabled" : undefined}`}>
                     »

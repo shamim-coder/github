@@ -1,20 +1,25 @@
+import { createContext, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import GithubUser from "./Components/GithubUser";
-import Home from "./Components/Home";
-import NotFound from "./Components/NotFound";
+import GithubUser from "./Components/Pages/GithubUser";
+import Home from "./Components/Pages/Home";
+import NotFound from "./Components/Shared/NotFound";
+
+export const UserContext = createContext();
 
 function App() {
+    const [username, setUsername] = useState("");
+
     return (
-        <main data-theme="corporate">
+        <UserContext.Provider value={[username, setUsername]}>
             <Routes>
                 <Route path="/" element={<Home />} />
 
                 <Route path="/:username" element={<GithubUser />} />
 
-                <Route path="*" element={<NotFound />} />
+                <Route path="/user-not-found" element={<NotFound />} />
             </Routes>
-        </main>
+        </UserContext.Provider>
     );
 }
 

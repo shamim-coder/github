@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import useRepositories from "../Hooks/useRepositories";
-import useUser from "../Hooks/useUser";
-import Header from "./Header";
-import Pagination from "./Pagination";
+import useRepositories from "../../Hooks/useRepositories";
+import useUser from "../../Hooks/useUser";
+import Header from "../Shared/Header";
+import Pagination from "../Shared/Pagination";
 import Repositories from "./Repositories";
 
 const GithubUser = () => {
     const { username } = useParams();
+
     const [user] = useUser(username);
     const [repositories, setRepositories] = useState([]);
     const { pageLoading } = useRepositories(username, setRepositories);
